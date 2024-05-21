@@ -1,29 +1,26 @@
-import { useState } from "react"
-import { serverApi } from "../utils/api";
 import Swal from "sweetalert2"
 import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { loginUser, setUser } from "../features/login/loginSlice";
 
 export default function Login() {
-    const [email, setEmail] = useState("")
-    const [password, setPassword] = useState("")
+    const user = useSelector((state) => state.login.user)
+    const dispatch = useDispatch()
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        dispatch(setUser({ [name]: value }))
+    };
 
     async function handleOnLogin(event) {
         event.preventDefault()
         try {
-            let { data } = await serverApi({
-                method: 'post',
-                url: '/login',
-                data: {
-                    email,
-                    password
-                }
-            });
+            await dispatch(loginUser(user))
             Swal.fire({
                 title: "Success login",
                 text: "Clicked the button!",
                 icon: "success"
             });
-            localStorage.setItem("access_token", data.access_token)
         } catch (error) {
             console.error(error.response?.data.message)
             Swal.fire({
@@ -46,8 +43,9 @@ export default function Login() {
                         className="form-control"
                         id="email"
                         placeholder="Enter email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
+                        name="email"
+                        value={user.email}
+                        onChange={handleChange}
                     />
                 </div>
                 <div className="form-group mb-4">
@@ -57,8 +55,9 @@ export default function Login() {
                         className="form-control"
                         id="password"
                         placeholder="Enter password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
+                        name="password"
+                        value={user.password}
+                        onChange={handleChange}
                     />
                 </div>
                 <button type="submit" className="btn btn-primary w-100 mb-2">
