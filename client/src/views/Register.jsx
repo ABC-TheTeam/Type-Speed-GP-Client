@@ -1,26 +1,22 @@
-import { useState } from "react"
-import { serverApi } from "../utils/api";
 import Swal from "sweetalert2"
 import { Link, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { registerUser, setUser } from "../features/register/registerSlice";
 
 export default function Register() {
-    const [name, setName] = useState("")
-    const [email, setEmail] = useState("")
-    const [password, setPassword] = useState("")
     const navigate = useNavigate()
+    const user = useSelector((state) => state.register.user)
+    const dispatch = useDispatch()
+    
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        dispatch(setUser({[name] : value}))
+    };
 
     async function handleOnRegister(event) {
         event.preventDefault()
         try {
-            let { data } = await serverApi({
-                method: 'post',
-                url: '/register',
-                data: {
-                    name,
-                    email,
-                    password
-                }
-            });
+            await dispatch(registerUser(user))
             Swal.fire({
                 title: "Success register",
                 text: "Clicked the button!",
@@ -49,8 +45,9 @@ export default function Register() {
                         className="form-control"
                         id="name"
                         placeholder="Enter name"
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
+                        name="name"
+                        value={user.name}
+                        onChange={handleChange}
                     />
                 </div>
                 <div className="form-group mb-3">
@@ -60,8 +57,9 @@ export default function Register() {
                         className="form-control"
                         id="email"
                         placeholder="Enter email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
+                        name="email"
+                        value={user.email}
+                        onChange={handleChange}
                     />
                 </div>
                 <div className="form-group mb-4">
@@ -71,8 +69,9 @@ export default function Register() {
                         className="form-control"
                         id="password"
                         placeholder="Enter password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
+                        name="password"
+                        value={user.password}
+                        onChange={handleChange}
                     />
                 </div>
                 <button type="submit" className="btn btn-primary w-100">
