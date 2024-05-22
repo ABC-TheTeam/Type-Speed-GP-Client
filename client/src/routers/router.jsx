@@ -4,9 +4,9 @@ import {
 } from "react-router-dom";
 import Register from '../views/Register';
 import Login from "../views/Login";
-import TestTyping from "../components/TestTyping";
 import HomePage from "../views/HomePage";
 import MainLayout from "../views/MainLayout";
+import Game from "../views/Game";
 
 const router = createBrowserRouter([
     {
@@ -21,6 +21,10 @@ const router = createBrowserRouter([
             {
                 path: "/",
                 element: <HomePage />
+            },
+            {
+                path: "/game",
+                element: <Game />
             }
         ]
     },
@@ -38,10 +42,6 @@ const router = createBrowserRouter([
             return null
         }
     },
-    {
-        path: "/games",
-        element: <TestTyping/>
-    }
 ]);
 
 export default router
