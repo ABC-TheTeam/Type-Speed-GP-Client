@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { socket } from "../utils/socket";
 
 export default function TestTyping() {
   const paragraph =
@@ -14,19 +15,31 @@ export default function TestTyping() {
   const inputRef = useRef(null);
   const charRefs = useRef([]);
   const [rightWrong, setRightWrong] = useState([]);
+  
+  const [messages, setMessages] = useState([
+    {
+        id: new Date().getTime(),
+        sender: "Admin",
+        message: "Welcome to the chat app"
+    }
+  ]);
+
+  const [message, setMessage] = useState("");
+  const email = localStorage.email;
+  const username = email.split("@")[0];
 
   useEffect(() => {
     inputRef.current.focus();
     setRightWrong(Array(charRefs.current.length).fill(""));
   }, []);
 
-  useEffect(() =>{
+  useEffect(() => {
     let interval;
-    if (isType && timeLeft > 0){
-      interval = setInterval(() =>{
+    if (isType && timeLeft > 0) {
+      interval = setInterval(() => {
         setTimeLeft(timeLeft - 1);
         let rightChars = charIndex - mistakes;
-        let totalTime = maxTime - timeLeft
+        let totalTime = maxTime - timeLeft;
 
         let cpm = rightChars * (60 / totalTime);
         cpm = cpm < 0 || !cpm || cpm === Infinity ? 0 : cpm;
@@ -34,27 +47,45 @@ export default function TestTyping() {
 
         let wpm = Math.round((rightChars / 5 / totalTime) * 60);
         wpm = wpm < 0 || !wpm || wpm === Infinity ? 0 : wpm;
-        setWPM(wpm)
-      }, 1000)
-    } else if(timeLeft === 0){
+        setWPM(wpm);
+      }, 1000);
+    } else if (timeLeft === 0) {
       clearInterval(interval);
-      setIsType(false)
+      setIsType(false);
     }
-    return() =>{
-      clearInterval(interval)
-    }
-  }, [isType, timeLeft])
+    return () => {
+      clearInterval(interval);
+    };
+  }, [isType, timeLeft]);
 
-  const resetGame = () => {
-    setIsType(false)
-    setTimeLeft(maxTime)
-    setCharIndex(0)
-    setMistakes(0)
-    setCPM(0)
-    setWPM(0)
-    setRightWrong(Array(charRefs.current.length).fill(''))
-    inputRef.current.focus()
-  }
+  const resetGame = (event) => {
+    event.preventDefault();
+    socket.emit("send-message", {
+      time: new Date().getTime(),
+      sender: "Admin",
+      message: `${username} got score of ${WPM} words per minutes and ${CPM} characters per minute`,
+    });
+    setMessage("");
+
+    setIsType(false);
+    setTimeLeft(maxTime);
+    setCharIndex(0);
+    setMistakes(0);
+    setCPM(0);
+    setWPM(0);
+    setRightWrong(Array(charRefs.current.length).fill(""));
+    inputRef.current.focus();
+  };
+
+  useEffect(() => {
+    if (socket) {
+      socket.emit("set-user", username);
+
+      socket.on("new-message", (payload) => {
+        setMessages((prev) => [...prev, payload]);
+      });
+    }
+  }, [socket]);
 
   const handleChanges = (e) => {
     const characters = charRefs.current;
@@ -91,7 +122,8 @@ export default function TestTyping() {
             onChange={handleChanges}
           />
           {paragraph.split("").map((char, index) => (
-            <span key={index}
+            <span
+              key={index}
               className={`char ${index === charIndex ? "active" : ""} 
               ${rightWrong[index]}`}
               ref={(e) => (charRefs.current[index] = e)}
@@ -106,7 +138,9 @@ export default function TestTyping() {
           <p>Mistakes: {mistakes}</p>
           <p>WPM: {WPM}</p>
           <p>CPM: {CPM}</p>
-          <button className="btn-outline-success btn" onClick={resetGame}>TEST</button>
+          <button className="btn-outline-success btn" onClick={resetGame}>
+            TEST
+          </button>
         </div>
       </div>
     </div>
