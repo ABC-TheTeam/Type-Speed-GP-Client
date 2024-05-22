@@ -2,6 +2,8 @@ import Swal from "sweetalert2"
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { loginUser, setUser } from "../features/login/loginSlice";
+import BrandLogo from "../assets/Group-Project-Logo.png"
+import "../styles/LoginRegisterPage.css"
 
 export default function Login() {
     const navigate = useNavigate();
@@ -36,6 +38,7 @@ export default function Login() {
 
     return (
         <div className="container-fluid d-flex flex-column justify-content-center justify-content-center align-items-center" style={{ height: "100vh" }}>
+            <img className="brand-logo" src={BrandLogo}/>
             <h1>Login</h1>
             <form className="w-25" onSubmit={(event) => handleOnLogin(event)}>
                 <div className="form-group mb-3">

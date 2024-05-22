@@ -2,6 +2,7 @@ import { socket } from "../utils/socket";
 import { useEffect, useState } from "react";
 import { ThemeContext } from "../contexts/ThemeContext";
 import { useContext } from "react";
+import "../styles/ChatApp.css"
 
 export default function ChatApp() {
   const { theme, setTheme, currentTheme} = useContext(ThemeContext)
@@ -37,8 +38,8 @@ export default function ChatApp() {
   }, [socket]);
   return (
     <>
-      <div className="d-flex flex-column gap-3">
-        <div className="border">
+      <div className="wrap-content d-flex flex-column gap-3">
+        <div className="chat-box border">
           {messages.map((msg) => (
             <div className="container">
               <div className="d-flex justify-content-start">
