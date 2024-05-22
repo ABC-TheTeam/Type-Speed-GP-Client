@@ -4,6 +4,8 @@ import {
 import Register from '../views/Register';
 import Login from "../views/Login";
 import TestTyping from "../components/TestTyping";
+import Navbar from "../components/Navbar";
+import Game from "../views/Game";
 
 const router = createBrowserRouter([
     {
@@ -15,8 +17,12 @@ const router = createBrowserRouter([
         element: <Login />,
     },
     {
-        path: "/games",
-        element: <TestTyping/>
+        path: "/game",
+        element: 
+        <>
+        <Navbar/>
+        <Game/>,
+        </>
     }
 
 ]);
