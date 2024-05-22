@@ -7,6 +7,7 @@ export default function Navbar() {
   const navigate = useNavigate();
 
   const handleLogout = () => {
+    localStorage.removeItem("email");
     localStorage.removeItem("access_token");
     navigate("/login");
   };
@@ -32,7 +33,7 @@ export default function Navbar() {
         >
           <span className="navbar-toggler-icon"></span>
         </button>
-        <Link to="/game"> Game </Link>
+        <Link to="/game" className={`nav-link ${theme[currentTheme].text}`}> Game </Link>
         <div
           className="collapse navbar-collapse px-3 justify-content-end"
           id="navbarSupportedContent"

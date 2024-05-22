@@ -1,7 +1,10 @@
 import { socket } from "../utils/socket";
 import { useEffect, useState } from "react";
+import { ThemeContext } from "../contexts/ThemeContext";
+import { useContext } from "react";
 
 export default function ChatApp() {
+  const { theme, setTheme, currentTheme} = useContext(ThemeContext)
   const [messages, setMessages] = useState([
     {
         id: new Date().getTime(),
@@ -39,7 +42,7 @@ export default function ChatApp() {
           {messages.map((msg) => (
             <div className="container">
               <div className="d-flex justify-content-start">
-                <span key={msg.id}>
+                <span key={msg.id} className={`${theme[currentTheme].text} `}>
                   <strong> {msg.sender} </strong> : {msg.message}
                 </span>
               </div>
