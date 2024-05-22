@@ -1,9 +1,10 @@
 import Swal from "sweetalert2"
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { loginUser, setUser } from "../features/login/loginSlice";
 
 export default function Login() {
+    const navigate = useNavigate();
     const user = useSelector((state) => state.login.user)
     const dispatch = useDispatch()
 
@@ -21,6 +22,7 @@ export default function Login() {
                 text: "Clicked the button!",
                 icon: "success"
             });
+        navigate('/')
         } catch (error) {
             console.error(error.response?.data.message)
             Swal.fire({

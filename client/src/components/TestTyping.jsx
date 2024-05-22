@@ -106,7 +106,7 @@ export default function TestTyping() {
           <p>Mistakes: {mistakes}</p>
           <p>WPM: {WPM}</p>
           <p>CPM: {CPM}</p>
-          <button className="btn-success btn" onClick={resetGame}>TEST</button>
+          <button className="btn-outline-success btn" onClick={resetGame}>TEST</button>
         </div>
       </div>
     </div>
