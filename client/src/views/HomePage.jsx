@@ -7,7 +7,7 @@ export default function HomePage() {
   return (
     <>
     <div className={`${theme[currentTheme].bg} `} style={{height: "100vh"}}>
-      <h1 className={`${theme[currentTheme].text} `}>Home Page</h1>
+      <h1 className={`${theme[currentTheme].text} `}>Speed Typer</h1>
       <ChatApp />
     </div>
     </>
